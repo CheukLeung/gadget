@@ -31,6 +31,7 @@ def format_color(text):
   """Format the text to output with colors
   @text text to be formatted
   """
+  text = text.replace("&amp;", "&")
   text = text.replace("<b>", color.BOLD)
   text = text.replace("<i>", color.ITALIC)
   text = text.replace("<li>", color.ITALIC)
