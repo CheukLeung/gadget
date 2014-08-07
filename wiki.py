@@ -6,6 +6,7 @@ import os
 class Wiki(object):
   """A class of Wiki enquiry
   """
+  WIKIURL       = "http://en.wikipedia.org/wiki/"
   WIKIAPI       = "http://en.wikipedia.org/w/api.php"
   WIKIAPI_FLAGS = {
     "action"          : "query",
@@ -24,6 +25,8 @@ class Wiki(object):
     self.titles = titles
     ## keywords
     self.keywords = None
+    ## URL visit
+    self.url = None
     ## XML raw results
     self.raw_results = None
     ## Printable results
@@ -34,7 +37,7 @@ class Wiki(object):
     """
     self.format_keywords()
     self.get_content()
-    self.format_results()    
+    self.format_results()   
     return self.results
 
   def format_keywords(self):
@@ -47,6 +50,7 @@ class Wiki(object):
     @endcond
     """
     formatted_titles = common.format_texts(self.titles);
+    self.url = self.WIKIURL + formatted_titles
     self.keywords = "titles=" + formatted_titles
     return
 
@@ -63,11 +67,12 @@ class Wiki(object):
     results = util.get_contents_text(self.raw_results, 'extract')
     self.results = common.format_color(results);
     return
-
+    
 def main():
     sys.argv.pop(0)
     wiki = Wiki(sys.argv)
     print wiki.get_results()
+    print "\nSource: " + wiki.url
 
 if __name__ == "__main__":
     main()

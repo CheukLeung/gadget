@@ -32,16 +32,21 @@ def format_color(text):
   @text text to be formatted
   """
   text = text.replace("&amp;", "&")
-  text = text.replace("<b>", color.BOLD)
+  text = text.replace("<b>", color.BOLD + color.LIGHTYELLOW)
   text = text.replace("<i>", color.ITALIC)
   text = text.replace("<li>", color.ITALIC)
-  text = text.replace("<p>", "")
   text = text.replace("<ol>", color.ITALIC)
+  text = text.replace("<code>", color.CYAN)
+  text = text.replace("<tt>", color.DARKCYAN)
+  text = text.replace("<p>", "")
+
   text = text.replace("<ul>", "")
   text = text.replace("</b>", color.END)
   text = text.replace("</i>", color.END)
   text = text.replace("</li>", color.END)
   text = text.replace("</ol>", color.END)
+  text = text.replace("</code>", color.END)
+  text = text.replace("</tt>", color.END)
   text = text.replace("</p>", "")
   text = text.replace("</ul>", "")  
   return text
@@ -54,8 +59,9 @@ class color:
   DARKCYAN = '\033[36m'
   BLUE = '\033[94m'
   GREEN = '\033[92m'
-  YELLOW = '\033[93m'
+  LIGHTYELLOW = '\033[93m'
   RED = '\033[91m'
+  YELLOW = '\033[33m'
   BOLD = '\033[1m'
   UNDERLINE = '\033[4m'
   ITALIC = '\033[3m'
