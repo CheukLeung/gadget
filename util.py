@@ -1,14 +1,4 @@
 import xml.etree.ElementTree as ET
-def get_nodes(xml, element):
-  """Extract all nodes from a XML content
-  @param xml text in XML format to get content from
-  @param element element to be searched
-  """  
-  contents = []
-  root = ET.fromstring(xml.encode('utf-8'))
-  for item in root.findall(element):
-    contents.append(item)
-  return contents
   
 def get_contents(xml, element):
   """Extract all matching element from a XML content
@@ -21,7 +11,7 @@ def get_contents(xml, element):
     contents.append(item)
   return contents
   
-def get_contents_text(xml, element):
+def get_contents_text(xml, element, newline=True):
 
   """Extract the results in text from a XML content
   @param xml text in XML format to get content from
@@ -30,5 +20,5 @@ def get_contents_text(xml, element):
   result = ""
   contents = get_contents(xml, element)
   for content in contents:
-    result = result + "\n" + content.text
+    result = result + "\n" * newline + content.text + " "
   return result
