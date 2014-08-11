@@ -1,5 +1,5 @@
 #!/usr/bin/python
-
+import os
 import notify
 import requests
 import time
@@ -7,6 +7,7 @@ import time
 class Jenkins_Snapshot(object):
   JENKINS_API = 'http://tmgsseco01:8080/api/json'
   JENKINS_QUEUE_API = 'http://tmgsseco01:8080/queue/api/json'
+  JENKINS_ICON = os.path.dirname(os.path.realpath(__file__)) + '/jenkins.png'
 
   time = None
   content = None
@@ -25,7 +26,7 @@ class Jenkins_Snapshot(object):
       if "anime" in job["color"]:
         notification = notification + job["name"] + " is running.\n"
     notification = notification + "Jobs queue: %d" % len(self.queue)
-    notify.notify(summary = "Jenkins listener is started", body = notification)
+    notify.notify(summary = "Jenkins listener is started", body = notification, app_icon=self.JENKINS_ICON)
     return 
 
   def report_difference(self, last_snapshot):
@@ -34,7 +35,7 @@ class Jenkins_Snapshot(object):
     notification = notification + self.new_jobs(last_snapshot)
     notification = notification + "Jobs queue: %d" % len(self.queue)
     if self.changed:
-      notify.notify(summary = "Jenkins jobs notifcation", body = notification)
+      notify.notify(summary = "Jenkins jobs notifcation", body = notification, app_icon=self.JENKINS_ICON)
     return 
   
   def get_jobs_changed(self, last_snapshot):
