@@ -80,7 +80,7 @@ if __name__ == "__main__":
   snapshot.report_start()
   old_snapshot = snapshot
   while True:
-    time.sleep(15)
+    time.sleep(30)
     snapshot = Jenkins_Snapshot(int (time.time()))
     snapshot.report_difference(old_snapshot)
     old_snapshot = snapshot
