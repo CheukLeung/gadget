@@ -44,7 +44,7 @@ class SvD(object):
   def format_results(self):
     """Extract the results from a wiki XML content
     """  
-    results = self.raw_results.json()["SvDSearch"]["results"]["articles"][0:20]
+    results = self.raw_results.json()["SvDSearch"]["results"]["articles"]
     output = "\n" 
     if self.interested == -1:
       i = 0
@@ -62,7 +62,7 @@ class SvD(object):
         output = output + all_div[0].get_text().replace("\n\n", "\n")
         
       output = output + "<tt>Source: " + results[self.interested]["url"]  + "</tt>\n"
-    self.results = common.format_color(output)
+    self.results = common.format_color(output).encode('utf-8')
     return
 
 def main():
