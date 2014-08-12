@@ -2,6 +2,7 @@ import common
 import util
 import sys
 import os
+import re
 
 class Translate(object):
   """A class of Translate enquiry
@@ -38,26 +39,35 @@ class Translate(object):
   def format_keywords(self):
     """Format the keywords
     """
+    
     formatted_sentences = common.format_texts(self.sentences);
+    formatted_sentences = self.remove_color(formatted_sentences);
+
     self.keywords = "q=select%20*%20from%20google.translate%20where%20q%3D%22" 
     self.keywords = self.keywords + formatted_sentences 
     self.keywords = self.keywords + "%22%20and%20target%3D%22"
     self.keywords = self.keywords + self.language
     self.keywords = self.keywords + "%22%3B"
     return
-
+  
+  def remove_color(self, sentences):
+    formatted_sentences = re.sub(r"\033\[\d*m", "", sentences)
+    return formatted_sentences 
+  
   def get_content(self):
     """Get the content of the translate enquiry
     """
     formatted_url = common.format_url(self.TRANSLATEAPI, self.TRANSLATEAPI_FLAGS, self.keywords);
+
     self.raw_results = common.get_url_content(formatted_url)
+    self.results = util.get_contents_text(self.raw_results, 'trans')
     return
     
   def format_results(self):
     """Extract the results from a wiki XML content
     """  
     results = util.get_contents_text(self.raw_results, 'trans')
-    self.results = common.format_color(results);
+    self.results = common.format_color(self.results);
     return
 
 def main():

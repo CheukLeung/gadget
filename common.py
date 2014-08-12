@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import requests
 
 def format_texts(texts):
@@ -6,7 +7,13 @@ def format_texts(texts):
   """
   formatted_text = texts.pop(0)
   for text in texts:
-    formatted_text = formatted_text + "%20" + text
+    text = text.replace(":", "%3A")
+    text = text.replace("/", "%2F")
+    text = text.replace(".", "%2E")
+    text = text.replace(" ", "%20")
+    text = text.replace("”", "%22")
+    text = text.replace(" ", "%0A")
+    formatted_text = formatted_text + "%20" + text.strip()
   return formatted_text
 
 def format_url(api, flags, keywords):

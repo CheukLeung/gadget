@@ -65,14 +65,14 @@ class Wiki(object):
     """Extract the results from a wiki XML content
     """  
     results = util.get_contents_text(self.raw_results, 'extract')
-    self.results = common.format_color(results);
+    results = results + "\n<tt>Source: " + self.url + "</tt>\n"
+    self.results = common.format_color(results).encode('utf-8');
     return
     
 def main():
     sys.argv.pop(0)
     wiki = Wiki(sys.argv)
     print wiki.get_results()
-    print "\nSource: " + wiki.url
 
 if __name__ == "__main__":
     main()
