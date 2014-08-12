@@ -4,17 +4,17 @@ import util
 import sys
 import os
 
-class Wiki(object):
+class SL(object):
   """A class of Wiki enquiry
   """
   
-  WIKIAPI       = "http://api.sl.se/api2/realtimedepartures.json"
-  WIKIAPI_FLAGS = {
+  SLAPI       = "http://api.sl.se/api2/realtimedepartures.json"
+  SLAPI_FLAGS = {
     "key"          : "86564990d30b4fc496406e1b93c12686",
     "timewindow"   : "30",
   }
 
-  def __init__(self, siteid):
+  def __init__(self, siteid, direction):
     """Constructor of the Wiki enquiry
     @param titles titles to be searched
     """
@@ -22,6 +22,8 @@ class Wiki(object):
     self.siteid = siteid
     ## XML raw results
     self.raw_results = None
+    ## 
+    self.direction = int(direction)
     ## Printable results
     self.results = None
 
@@ -36,13 +38,13 @@ class Wiki(object):
   def format_keywords(self):
     """Format the keywords
     """
-    self.keywords = "siteid=%d" % self.siteid
+    self.keywords = "siteid=" + self.siteid
     return
 
   def get_content(self):
     """Get the content of the wiki enquiry
     """
-    formatted_url = common.format_url(self.WIKIAPI, self.WIKIAPI_FLAGS, self.keywords);
+    formatted_url = common.format_url(self.SLAPI, self.SLAPI_FLAGS, self.keywords);
     self.raw_results = requests.get(formatted_url)
     return
     
@@ -64,22 +66,42 @@ class Wiki(object):
     for tram in tram_results:
       all_traffic.append(tram)
     
-    self.results = self.form_results_text(all_traffic)
+    output = "\n" + self.raw_results.json()["ResponseData"]["LatestUpdate"] + "\n\n"
+    output = output + self.form_results_text(all_traffic)
+    if self.raw_results.json()["Message"] != None:
+      output = output + "\n" + self.raw_results.json()["Message"] + "\n"
+    self.results = output
     return
   
   def form_results_text(self, all_traffic):
-    seq = [transport["ExpectedDateTime"] for transport in all_traffic]
-    
-    return min(seq)
+    seq = sorted(all_traffic, key=lambda traffic: traffic["ExpectedDateTime"]);
+    output1=""
+    output2=""
+    for traffic in seq:
+      if traffic["JourneyDirection"] == 1:
+        output1 = output1 + self.format_traffic(traffic)
+      if traffic["JourneyDirection"] == 2:
+        output2 = output2 + self.format_traffic(traffic)
+    if self.direction == 1:
+      output = output1
+    elif self.direction == 2:
+      output = output2
+    elif self.direction == 3:
+      output = output1 + "\n" + output2
+    return output
   
-  def format_a_traffic(self, traffic):
-    return 
+  def format_traffic(self, traffic):
+    text = '%-7s' % traffic["TransportMode"]
+    text = text + '%-7s' % traffic["LineNumber"]
+    text = text + '%-40s' % traffic["Destination"]
+    text = text + '%-9s' % traffic["DisplayTime"]
+    text = text + "\n"
+    
+    return text
     
 def main():
-    sys.argv.pop(0)
-    #wiki = Wiki(sys.argv[1])
-    wiki = Wiki(4634)
-    print wiki.get_results()
+    sl = SL(sys.argv[1], sys.argv[2])
+    print sl.get_results()
 
 if __name__ == "__main__":
     main()
