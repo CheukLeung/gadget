@@ -2,7 +2,7 @@ import dbus
 import sys
 
 def notify(summary, body='', app_name='', app_icon='',
-    timeout=1000, actions=[], hints=[], replaces_id=0):
+    timeout=5000, actions=[], hints=[], replaces_id=0):
   _bus_name = 'org.freedesktop.Notifications'
   _object_path = '/org/freedesktop/Notifications'
   _interface_name = _bus_name
