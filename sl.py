@@ -4,8 +4,66 @@ import util
 import sys
 import os
 
-class SL(object):
+class SLName(object):
   """A class of Wiki enquiry
+  """
+  SLNAMEAPI       = "http://api.sl.se/api2/typeahead.json"
+  SLNAMEAPI_FLAGS = {
+    "key"           : "a0c908774ff44caab2e553fd4bb9f609",
+    "stationsonly"  : "True",
+    "maxresults"    : "30"
+  }
+  
+  def __init__(self, name):
+    """Constructor of the Wiki enquiry
+    @param titles titles to be searched
+    """
+    ## titles to be searched
+    self.name = name
+    ## Keyword to be searched
+    self.keywords = None
+    ## XML raw results
+    self.raw_results = None
+    ## Printable results
+    self.results = None
+    ##
+    self.first_id = 0
+
+  def get_results(self):
+    """Get a formatted results
+    """
+    self.format_keywords()
+    self.get_content()
+    self.format_results()    
+    return self.results
+  
+  def format_keywords(self):
+    """Format the keywords
+    """
+    self.keywords = "searchstring=" + common.format_texts(self.name)
+    return
+
+  def get_content(self):
+    """Get the content of the wiki enquiry
+    """
+    formatted_url = common.format_url(self.SLNAMEAPI, self.SLNAMEAPI_FLAGS, self.keywords);
+    self.raw_results = requests.get(formatted_url)
+    return
+
+  def format_results(self):
+    """Extract the results from a wiki XML content
+    """  
+    results = self.raw_results.json()["ResponseData"]
+  
+    output = "\n" 
+    for result in results:
+      output = output + '%-6s' % result["SiteId"] + result["Name"] + "\n"
+    self.results = output
+    self.first_id = results[0]["SiteId"]
+    return
+
+class SL(object):
+  """A class of SL stop enquiry
   """
   
   SLAPI       = "http://api.sl.se/api2/realtimedepartures.json"
@@ -66,7 +124,7 @@ class SL(object):
     for tram in tram_results:
       all_traffic.append(tram)
     
-    output = "\n" + self.raw_results.json()["ResponseData"]["LatestUpdate"] + "\n\n"
+    output = "\n" + self.raw_results.json()["ResponseData"]["LatestUpdate"].replace("T", " ") + "\n\n"
     output = output + self.form_results_text(all_traffic)
     if self.raw_results.json()["Message"] != None:
       output = output + "\n" + self.raw_results.json()["Message"] + "\n"
@@ -74,10 +132,9 @@ class SL(object):
     return
   
   def form_results_text(self, all_traffic):
-    seq = sorted(all_traffic, key=lambda traffic: traffic["ExpectedDateTime"]);
     output1=""
     output2=""
-    for traffic in seq:
+    for traffic in all_traffic:
       if traffic["JourneyDirection"] == 1:
         output1 = output1 + self.format_traffic(traffic)
       if traffic["JourneyDirection"] == 2:
@@ -100,8 +157,21 @@ class SL(object):
     return text
     
 def main():
-    sl = SL(sys.argv[1], sys.argv[2])
-    print sl.get_results()
+    if len(sys.argv) < 4:
+      sl = SL(sys.argv[1], sys.argv[2])
+      print sl.get_results()
+    elif sys.argv[3].isdigit():
+      if len(sys.argv) > 4:
+        sl = SL(sys.argv[3], sys.argv[4])
+      else:
+        sl = SL(sys.argv[3], 3)
+      print sl.get_results()
+    else:
+      sys.argv.pop(0)
+      sys.argv.pop(0)
+      sys.argv.pop(0)
+      slname = SLName(sys.argv)
+      print slname.get_results()
 
 if __name__ == "__main__":
     main()
