@@ -157,21 +157,21 @@ class SL(object):
     return text
     
 def main():
-    if len(sys.argv) < 4:
-      sl = SL(sys.argv[1], sys.argv[2])
-      print sl.get_results()
-    elif sys.argv[3].isdigit():
-      if len(sys.argv) > 4:
-        sl = SL(sys.argv[3], sys.argv[4])
-      else:
-        sl = SL(sys.argv[3], 3)
-      print sl.get_results()
+  if len(sys.argv) < 4:
+    sl = SL(sys.argv[1], sys.argv[2])
+    print sl.get_results()
+  elif sys.argv[3].isdigit():
+    if len(sys.argv) > 4:
+      sl = SL(sys.argv[3], sys.argv[4])
     else:
-      sys.argv.pop(0)
-      sys.argv.pop(0)
-      sys.argv.pop(0)
-      slname = SLName(sys.argv)
-      print slname.get_results()
+      sl = SL(sys.argv[3], 3)
+    print sl.get_results()
+  else:
+    sys.argv.pop(0)
+    sys.argv.pop(0)
+    sys.argv.pop(0)
+    slname = SLName(sys.argv)
+    print slname.get_results()
 
 if __name__ == "__main__":
-    main()
+  main()
