@@ -70,9 +70,9 @@ class Wiki(object):
     return
     
 def main():
-    sys.argv.pop(0)
-    wiki = Wiki(sys.argv)
-    print wiki.get_results()
+  sys.argv.pop(0)
+  wiki = Wiki(sys.argv)
+  print wiki.get_results()
 
 if __name__ == "__main__":
-    main()
+  main()

@@ -71,10 +71,10 @@ class Translate(object):
     return
 
 def main():
-    sys.argv.pop(0)
-    lang = sys.argv.pop(0)
-    translate = Translate(lang, sys.argv)
-    print translate.get_results()
+  sys.argv.pop(0)
+  lang = sys.argv.pop(0)
+  translate = Translate(lang, sys.argv)
+  print translate.get_results()
 
 if __name__ == "__main__":
-    main()
+  main()

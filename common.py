@@ -39,11 +39,11 @@ def format_color(text):
   @text text to be formatted
   """
   text = text.replace("&amp;", "&")
-  text = text.replace("<b>", color.BOLD + color.LIGHTYELLOW)
+  text = text.replace("<b>", color.BOLD + color.RED)
   text = text.replace("<i>", color.ITALIC)
   text = text.replace("<li>", color.ITALIC)
   text = text.replace("<ol>", color.ITALIC)
-  text = text.replace("<code>", color.CYAN)
+  text = text.replace("<code>", color.BLUE)
   text = text.replace("<tt>", color.DARKCYAN)
   text = text.replace("<p>", "")
 
