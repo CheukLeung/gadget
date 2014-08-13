@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import requests
 import common
 import util
@@ -62,7 +63,7 @@ class SvD(object):
         output = output + all_div[0].get_text().replace("\n\n", "\n")
         
       output = output + "<tt>Source: " + results[self.interested]["url"]  + "</tt>\n"
-    self.results = common.format_color(output).encode('utf-8')
+    self.results = common.format_color(output).encode('utf-8').replace("”", "\"")
     return
 
 def main():

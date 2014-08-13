@@ -7,12 +7,17 @@ def format_texts(texts):
   """
   formatted_text = texts.pop(0)
   for text in texts:
+    text = text.replace("%", "%25")
+    text = text.replace("&", "%26")
     text = text.replace(":", "%3A")
     text = text.replace("/", "%2F")
     text = text.replace(".", "%2E")
     text = text.replace(" ", "%20")
-    text = text.replace("”", "%22")
     text = text.replace(" ", "%0A")
+    text = text.replace("\"", "'")
+    text = text.replace("–", "%2D")
+    text = text.replace("(", "%28")
+    text = text.replace(")", "%29")
     formatted_text = formatted_text + "%20" + text.strip()
   return formatted_text
 
@@ -40,9 +45,9 @@ def format_color(text):
   """
   text = text.replace("&amp;", "&")
   text = text.replace("<b>", color.BOLD + color.RED)
-  text = text.replace("<i>", color.ITALIC)
-  text = text.replace("<li>", color.ITALIC)
-  text = text.replace("<ol>", color.ITALIC)
+  text = text.replace("<i>", color.GREEN)
+  text = text.replace("<li>", color.GREEN)
+  text = text.replace("<ol>", color.GREEN)
   text = text.replace("<code>", color.BLUE)
   text = text.replace("<tt>", color.DARKCYAN)
   text = text.replace("<p>", "")
