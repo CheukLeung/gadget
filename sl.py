@@ -84,6 +84,7 @@ class SL(object):
     self.direction = int(direction)
     ## Printable results
     self.results = None
+    self.traffics = []
 
   def get_results(self):
     """Get a formatted results
@@ -124,7 +125,8 @@ class SL(object):
     for tram in tram_results:
       all_traffic.append(tram)
     
-    output = "\n" + self.raw_results.json()["ResponseData"]["LatestUpdate"].replace("T", " ") + "\n\n"
+    #   output = "\n" + self.raw_results.json()["ResponseData"]["LatestUpdate"].replace("T", " ") + "\n\n"
+    output = ""
     output = output + self.form_results_text(all_traffic)
     if self.raw_results.json()["Message"] != None:
       output = output + "\n" + self.raw_results.json()["Message"] + "\n"
@@ -153,7 +155,12 @@ class SL(object):
     text = text + '%-40s' % traffic["Destination"]
     text = text + '%-9s' % traffic["DisplayTime"]
     text = text + "\n"
-    
+    self.traffics.append({
+                          'TransportMode' : traffic["TransportMode"],
+                          'LineNumber' : traffic["LineNumber"],
+                          'Destination' : traffic["Destination"],
+                          'DisplayTime' : traffic["DisplayTime"]
+                        })
     return text
     
 def main():
