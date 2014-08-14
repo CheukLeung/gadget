@@ -51,6 +51,8 @@ def format_color(text):
   text = text.replace("<code>", color.BLUE)
   text = text.replace("<tt>", color.DARKCYAN)
   text = text.replace("<p>", "")
+  text = text.replace("<dd>", "")
+  text = text.replace("<dl>", "")
 
   text = text.replace("<ul>", "")
   text = text.replace("</b>", color.END)
@@ -61,6 +63,8 @@ def format_color(text):
   text = text.replace("</tt>", color.END)
   text = text.replace("</p>", "")
   text = text.replace("</ul>", "")  
+  text = text.replace("</dd>", "")
+  text = text.replace("</dl>", "")
   return text
   
 class color:

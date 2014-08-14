@@ -26,6 +26,7 @@ class SLName(object):
     self.raw_results = None
     ## Printable results
     self.results = None
+    self.time = None
     ##
     self.first_id = 0
 
@@ -125,7 +126,8 @@ class SL(object):
     for tram in tram_results:
       all_traffic.append(tram)
     
-    #   output = "\n" + self.raw_results.json()["ResponseData"]["LatestUpdate"].replace("T", " ") + "\n\n"
+    self.time = self.raw_results.json()["ResponseData"]["LatestUpdate"].replace("T", " ")
+    output = "\n" + self.time + "\n\n"
     output = ""
     output = output + self.form_results_text(all_traffic)
     if self.raw_results.json()["Message"] != None:

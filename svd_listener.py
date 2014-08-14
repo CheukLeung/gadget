@@ -33,12 +33,10 @@ class SvD_Snapshot(object):
     return 
 
   def report_difference(self, last_snapshot):
-    articles_count = len(self.content)
     for article in reversed(self.content):
       current_changed = True
       for last_article in last_snapshot.content: 
-        if article["title"] == last_article["title"]:   
-          articles_count = articles_count - 1
+        if article["title"] == last_article["title"] and article["friendlyDateShort"] == last_article["friendlyDateShort"]:   
           current_changed = False
       if current_changed:
         notify.notify(summary = article["title"], body = article["description"] + " (" + article["friendlyDateShort"] + ")\n" , app_icon=self.SvD_ICON, timeout=10000)

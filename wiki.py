@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import common
 import util
 import sys
@@ -6,21 +7,23 @@ import os
 class Wiki(object):
   """A class of Wiki enquiry
   """
-  WIKIURL       = "http://en.wikipedia.org/wiki/"
-  WIKIAPI       = "http://en.wikipedia.org/w/api.php"
   WIKIAPI_FLAGS = {
     "action"          : "query",
     "redirects"       : "true",
     "prop"            : "extracts",
     "exintro"         : "true",
     "exsectionformat" : "plain",
+    "exvariant"       : "zh-hk",
     "format"          : "xml"
   }
 
-  def __init__(self, titles):
+  def __init__(self, lang, titles):
     """Constructor of the Wiki enquiry
     @param titles titles to be searched
     """
+    self.WIKIURL = "http://%s.wikipedia.org/wiki/" % lang
+    self.WIKIAPI = "http://%s.wikipedia.org/w/api.php" % lang
+    self.lang = lang
     ## titles to be searched
     self.titles = titles
     ## keywords
@@ -49,7 +52,7 @@ class Wiki(object):
     titles=HelloWorld
     @endcond
     """
-    formatted_titles = common.format_texts(self.titles);
+    formatted_titles = common.format_texts(self.titles)
     self.url = self.WIKIURL + formatted_titles
     self.keywords = "titles=" + formatted_titles
     return
@@ -65,13 +68,15 @@ class Wiki(object):
     """Extract the results from a wiki XML content
     """  
     results = util.get_contents_text(self.raw_results, 'extract')
-    results = results + "\n<tt>Source: " + self.url + "</tt>\n"
-    self.results = common.format_color(results).encode('utf-8');
+    if self.lang != "zh":
+      results = results + "\n<tt>Source: " + self.url + "</tt>\n"
+    self.results = common.format_color(results).encode('utf-8')
     return
     
 def main():
   sys.argv.pop(0)
-  wiki = Wiki(sys.argv)
+  lang = sys.argv.pop(0)
+  wiki = Wiki(lang, sys.argv)
   print wiki.get_results()
 
 if __name__ == "__main__":
