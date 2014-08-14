@@ -128,7 +128,6 @@ class SL(object):
     
     self.time = self.raw_results.json()["ResponseData"]["LatestUpdate"].replace("T", " ")
     output = "\n" + self.time + "\n\n"
-    output = ""
     output = output + self.form_results_text(all_traffic)
     if self.raw_results.json()["Message"] != None:
       output = output + "\n" + self.raw_results.json()["Message"] + "\n"

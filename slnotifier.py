@@ -9,6 +9,7 @@ sl_ins.get_results()
 traffics = sl_ins.traffics
 r=1
 Tkinter.Label(root, text="Type", bd=1, bg='#0089FF', fg='#FFFFFF', anchor=Tkinter.W).grid(ipadx=5, row=0, column=0, sticky=Tkinter.W)
+Tkinter.Label(root, text="Type", bd=1, bg='#0089FF', fg='#FFFFFF', anchor=Tkinter.W).grid(ipadx=5, row=0, column=0, sticky=Tkinter.W)
 Tkinter.Label(root, text="Line", bd=1, bg='#0089FF', fg='#FFFFFF', anchor=Tkinter.W).grid(ipadx=5, row=0, column=1)
 Tkinter.Label(root, text="Destination", bd=1, bg='#0089FF', fg='#FFFFFF', anchor=Tkinter.W).grid(ipadx=5, row=0, column=2, sticky=Tkinter.W)
 Tkinter.Label(root, text="Time", bd=1, bg='#0089FF', fg='#FFFFFF', anchor=Tkinter.W).grid(ipadx=5, row=0, column=3, sticky=Tkinter.E)
