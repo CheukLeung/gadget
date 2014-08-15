@@ -1,10 +1,15 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import sl
 from Tkinter import *
 import time
 import os
 from PIL import Image, ImageTk
 import csv
+import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
 
 class App():
   
@@ -27,8 +32,12 @@ class App():
     image = Image.open(self.refresh_icon)
     self.refresh_photo = ImageTk.PhotoImage(image)
     self.data = self.read_database()
+    self.current_data = self.data
     self.direction = 2
+    self.search_str = StringVar()
     self.f=Frame()
+    self.s=Frame()
+    self.entry=None
     self.f.pack()
     self.selector = None
     self.update_clock()
@@ -57,30 +66,64 @@ class App():
   def change_id(self, event):
     selector = event.widget
     index = int(selector.curselection()[0])
-    self.siteid = self.data[index]['SiteId']
+    self.siteid = self.current_data[index]['SiteId']
     self.selector.destroy()
     self.draw()
   
-
-  def selector_callback(self):
-    self.selector = Tk()
-    self.selector.wm_title("Select a place")
-    self.selector.geometry("250x700")
+  def search(self, event):
+    self.current_data = []
+    if event.keycode == 3342463:
+      target_name = event.widget.get()[:len(event.widget.get())-1]
+    else:
+      target_name = event.widget.get()+event.char
+    target_name = target_name.decode('utf-8').strip().lower().replace(' ', '')
+    target_name = target_name.replace('ö', 'o')
+    target_name = target_name.replace('ä', 'a')
+    target_name = target_name.replace('å', 'a')
+    target_name = target_name.replace('é', 'e')
+    for stop in self.data:
+      current_name = stop['SiteName'].decode('utf-8').strip().lower().replace(' ', '')
+      current_name = current_name.replace('ö', 'o')
+      current_name = current_name.replace('ä', 'a')
+      current_name = current_name.replace('ä', 'a')
+      current_name = current_name.replace('é', 'e')
+      if target_name in current_name:
+        self.current_data.append(stop)
+    self.selector_draw()
+    print target_name
+  
+  def selector_draw(self):
     r=0
     blue = '#2A9CD5'
     white = '#FFFFFF'
     grey = '#CCCCCC'
-    listbox = Listbox(self.selector, selectmode=SINGLE)
+    self.s.pack_forget()
+    self.s.destroy()
+    self.s=Frame(self.selector)
+    self.s.pack(fill=BOTH, expand=1)
+    listbox = Listbox(self.s, selectmode=SINGLE)
     listbox.bind("<Double-Button-1>", self.change_id)
     listbox.pack(fill=BOTH, expand=1)
-    for stop in self.data:
+    for stop in self.current_data:
       if r % 2:
         bg = grey
       else:
         bg = white
       listbox.insert(END, stop['SiteName'])
       
-      r=r+1    
+      r=r+1
+
+  def selector_callback(self):
+    self.selector = Tk()
+    self.selector.wm_title("Select a place")
+    self.selector.geometry("250x700")
+    self.current_data = self.data
+    self.s=Frame(self.selector)
+    self.s.pack(fill=BOTH, expand=1)
+    self.entry = Entry(self.selector, bd=0, text="Search", textvariable=self.search_str)
+    self.entry.pack(fill=X)
+    self.entry.bind("<Key>", self.search)
+    self.selector_draw()
     self.selector.mainloop()
 
   def update_clock(self):
