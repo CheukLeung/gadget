@@ -142,8 +142,12 @@ class SL(object):
     for traffic in all_traffic:
       if traffic["JourneyDirection"] == 1:
         output1 = output1 + self.format_traffic(traffic)
+        if self.direction == 1 or self.direction == 3:
+          self.append_traffic(traffic)
       if traffic["JourneyDirection"] == 2:
         output2 = output2 + self.format_traffic(traffic)
+        if self.direction == 2 or self.direction == 3:
+          self.append_traffic(traffic)  
     if self.direction == 1:
       output = output1
     elif self.direction == 2:
@@ -158,13 +162,17 @@ class SL(object):
     text = text + '%-40s' % traffic["Destination"]
     text = text + '%-9s' % traffic["DisplayTime"]
     text = text + "\n"
+    
+    return text
+    
+  def append_traffic(self, traffic):
     self.traffics.append({
                           'TransportMode' : traffic["TransportMode"],
                           'LineNumber' : traffic["LineNumber"],
                           'Destination' : traffic["Destination"],
                           'DisplayTime' : traffic["DisplayTime"]
                         })
-    return text
+    return
     
 def main():
   if len(sys.argv) < 4:

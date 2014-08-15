@@ -18,7 +18,7 @@ blue = '#2A9CD5'
 white = '#FFFFFF'
 grey = '#CCCCCC'
 
-Tkinter.Label(root, image=photo, bg=blue, anchor=Tkinter.W).grid(ipadx=5, row=0, column=0, sticky=Tkinter.E+Tkinter.W)
+Tkinter.Label(root, image=photo, bg=blue, anchor=Tkinter.W).grid(ipadx=5, row=0, column=0, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
 Tkinter.Label(root, text=sl_ins.idname, bg=blue, fg=white, font=('Helvetica', 18, 'bold')).grid(ipadx=5, row=0, column=1, columnspan=3, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
 
 r=1

@@ -74,6 +74,8 @@ class Jenkins_Snapshot(object):
       resolved_text = " is finished with unstable.\n"
     elif "blue" in text:
       resolved_text = " is finished successfully.\n"
+    elif "aborted" in text:
+      resolved_text = " is aborted.\n"
     return resolved_text 
       
 if __name__ == "__main__":
