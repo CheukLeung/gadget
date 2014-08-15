@@ -27,7 +27,6 @@ class SLName(object):
     ## Printable results
     self.results = None
     self.time = None
-    self.idname = None
     ##
     self.first_id = 0
 
@@ -127,7 +126,6 @@ class SL(object):
     for tram in tram_results:
       all_traffic.append(tram)
     
-    self.idname = all_traffic[0]["StopAreaName"]
     self.time = self.raw_results.json()["ResponseData"]["LatestUpdate"].replace("T", " ")
     output = "\n" + self.time + "\n\n"
     output = output + self.form_results_text(all_traffic)
