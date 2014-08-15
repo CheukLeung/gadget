@@ -4,8 +4,7 @@ import Tkinter
 import time
 import os
 from PIL import Image, ImageTk
-
-
+import csv
 
 class App():
   
@@ -13,6 +12,7 @@ class App():
   to_icon = os.path.dirname(os.path.realpath(__file__)) + '/front.png'
   back_icon = os.path.dirname(os.path.realpath(__file__)) + '/back.png'
   refresh_icon = os.path.dirname(os.path.realpath(__file__)) + '/refresh.png'
+  database = os.path.dirname(os.path.realpath(__file__)) + '/sites.csv'
   
   def __init__(self):
     self.root = Tkinter.Tk()
@@ -24,17 +24,40 @@ class App():
     self.back_photo = ImageTk.PhotoImage(image)
     image = Image.open(self.refresh_icon)
     self.refresh_photo = ImageTk.PhotoImage(image)
-    
+    self.data = self.read_database()
     self.direction = 2
     self.update_clock()
     self.root.mainloop()
-
+    
+  def read_database(self):
+    with open(self.database, 'Ur') as f:
+      data = list({'SiteId' : j, 'SiteName' : k, 'StopAreaNumber' : l, 'LastModifiedUtcDateTime' : m, 'ExistsFromDate' : n } for j, k, l, m, n in csv.reader(f, delimiter=';'))
+    return data
 
   def update_callback(self):
     self.draw()
 
   def reverse_callback(self):
     self.direction = self.direction % 2 + 1
+    self.draw()
+
+  def selector_callback(self):
+    selector = Tkinter.Tk()
+    r=0
+    blue = '#2A9CD5'
+    white = '#FFFFFF'
+    grey = '#CCCCCC'
+    listbox = Tkinter.Listbox(selector)
+    listbox.pack()
+    for stop in self.data:
+      if r % 2:
+        bg = grey
+      else:
+        bg = white
+      listbox.insert(Tkinter.END, stop['SiteName'])
+      
+      r=r+1    
+    selector.mainloop()
     self.draw()
 
   def update_clock(self):
@@ -55,9 +78,10 @@ class App():
     grey = '#CCCCCC'
  
     Tkinter.Label(self.root, bd=0, image=self.photo, bg=blue, anchor=Tkinter.W).grid(ipadx=5, row=0, rowspan=2, column=0, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
-    Tkinter.Label(self.root, text=sl_ins.idname, bg=blue, fg=white, font=('Helvetica', 18, 'bold')).grid(ipadx=5, row=0, rowspan=2, column=1, columnspan=2, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
-    Tkinter.Button(self.root, image=self.refresh_photo, bg=blue, fg=blue, activeforeground=blue,  activebackground=blue, relief=Tkinter.FLAT, highlightcolor=blue, highlightbackground=blue, highlightthickness=0, command=self.update_callback).grid(ipadx=5, row=0, column=3, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
-    Tkinter.Button(self.root, image=direction_photo, bg=blue, fg=blue, activeforeground=blue,  activebackground=blue, relief=Tkinter.FLAT, highlightcolor=blue, highlightbackground=blue, highlightthickness=0, command=self.reverse_callback).grid(ipadx=5, row=1, column=3, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
+    Tkinter.Button(self.root, text=sl_ins.idname, font=('Helvetica', 18, 'bold'), bg=blue, fg=white, activeforeground=white,  activebackground=blue, relief=Tkinter.FLAT, highlightthickness=0, command=self.selector_callback).grid(ipadx=5, row=0, rowspan=2, column=1, columnspan=2, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
+    
+    Tkinter.Button(self.root, image=self.refresh_photo, bg=blue, fg=blue, activeforeground=blue,  activebackground=blue, relief=Tkinter.FLAT, highlightthickness=0, command=self.update_callback).grid(ipadx=5, row=0, column=3, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
+    Tkinter.Button(self.root, image=direction_photo, bg=blue, fg=blue, activeforeground=blue,  activebackground=blue, relief=Tkinter.FLAT, highlightthickness=0, command=self.reverse_callback).grid(ipadx=5, row=1, column=3, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
     
     r=2
     Tkinter.Label(self.root, text="Type", bg=blue, fg=white, anchor=Tkinter.W).grid(ipadx=5, row=r, column=0, sticky=Tkinter.E+Tkinter.W)
