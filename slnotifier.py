@@ -10,11 +10,21 @@ from PIL import Image, ImageTk
 class App():
   
   sl_icon = os.path.dirname(os.path.realpath(__file__)) + '/sl.png'
+  to_icon = os.path.dirname(os.path.realpath(__file__)) + '/front.png'
+  back_icon = os.path.dirname(os.path.realpath(__file__)) + '/back.png'
+  refresh_icon = os.path.dirname(os.path.realpath(__file__)) + '/refresh.png'
   
   def __init__(self):
     self.root = Tkinter.Tk()
-    self.image = Image.open(self.sl_icon)
-    self.photo = ImageTk.PhotoImage(self.image)
+    image = Image.open(self.sl_icon)
+    self.photo = ImageTk.PhotoImage(image)
+    image = Image.open(self.to_icon)
+    self.to_photo = ImageTk.PhotoImage(image)
+    image = Image.open(self.back_icon)
+    self.back_photo = ImageTk.PhotoImage(image)
+    image = Image.open(self.refresh_icon)
+    self.refresh_photo = ImageTk.PhotoImage(image)
+    
     self.direction = 2
     self.update_clock()
     self.root.mainloop()
@@ -34,6 +44,11 @@ class App():
   def draw(self):
     sl_ins = sl.SL("4634", "%d" % self.direction)
     sl_ins.get_results()
+    if self.direction % 2:
+      direction_photo = self.back_photo
+    else:
+      direction_photo = self.to_photo
+      
     traffics = sl_ins.traffics
     blue = '#2A9CD5'
     white = '#FFFFFF'
@@ -41,8 +56,8 @@ class App():
  
     Tkinter.Label(self.root, bd=0, image=self.photo, bg=blue, anchor=Tkinter.W).grid(ipadx=5, row=0, rowspan=2, column=0, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
     Tkinter.Label(self.root, text=sl_ins.idname, bg=blue, fg=white, font=('Helvetica', 18, 'bold')).grid(ipadx=5, row=0, rowspan=2, column=1, columnspan=2, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
-    Tkinter.Button(self.root, image=self.photo, bg=blue, fg=blue, activeforeground=blue,  activebackground=blue, relief=Tkinter.FLAT, highlightcolor=blue, highlightbackground=blue, highlightthickness=0, command=self.update_callback).grid(ipadx=5, row=0, column=3, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
-    Tkinter.Button(self.root, image=self.photo, bg=blue, fg=blue, activeforeground=blue,  activebackground=blue, relief=Tkinter.FLAT, highlightcolor=blue, highlightbackground=blue, highlightthickness=0, command=self.reverse_callback).grid(ipadx=5, row=1, column=3, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
+    Tkinter.Button(self.root, image=self.refresh_photo, bg=blue, fg=blue, activeforeground=blue,  activebackground=blue, relief=Tkinter.FLAT, highlightcolor=blue, highlightbackground=blue, highlightthickness=0, command=self.update_callback).grid(ipadx=5, row=0, column=3, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
+    Tkinter.Button(self.root, image=direction_photo, bg=blue, fg=blue, activeforeground=blue,  activebackground=blue, relief=Tkinter.FLAT, highlightcolor=blue, highlightbackground=blue, highlightthickness=0, command=self.reverse_callback).grid(ipadx=5, row=1, column=3, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
     
     r=2
     Tkinter.Label(self.root, text="Type", bg=blue, fg=white, anchor=Tkinter.W).grid(ipadx=5, row=r, column=0, sticky=Tkinter.E+Tkinter.W)
