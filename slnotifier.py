@@ -9,15 +9,19 @@ from PIL import Image, ImageTk
 
 class App():
   
+  sl_icon = os.path.dirname(os.path.realpath(__file__)) + '/sl.png'
+  
   def __init__(self):
     self.root = Tkinter.Tk()
+    self.image = Image.open(self.sl_icon)
+    self.photo = ImageTk.PhotoImage(self.image)
     self.update_clock()
     self.root.mainloop()
 
   def update_clock(self):
-    sl_icon = os.path.dirname(os.path.realpath(__file__)) + '/sl.png'
-    image = Image.open(sl_icon)
-    photo = ImageTk.PhotoImage(image)
+    
+
+
 
     sl_ins = sl.SL("4634", "2")
     sl_ins.get_results()
@@ -26,7 +30,7 @@ class App():
     white = '#FFFFFF'
     grey = '#CCCCCC'
 
-    Tkinter.Label(self.root, image=photo, bg=blue, anchor=Tkinter.W).grid(ipadx=5, row=0, column=0, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
+    Tkinter.Label(self.root, image=self.photo, bg=blue, anchor=Tkinter.W).grid(ipadx=5, row=0, column=0, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
     Tkinter.Label(self.root, text=sl_ins.idname, bg=blue, fg=white, font=('Helvetica', 18, 'bold')).grid(ipadx=5, row=0, column=1, columnspan=3, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
 
     r=1
