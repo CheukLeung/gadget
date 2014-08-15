@@ -15,25 +15,36 @@ class App():
     self.root = Tkinter.Tk()
     self.image = Image.open(self.sl_icon)
     self.photo = ImageTk.PhotoImage(self.image)
+    self.direction = 2
     self.update_clock()
     self.root.mainloop()
 
+
+  def update_callback(self):
+    self.draw()
+
+  def reverse_callback(self):
+    self.direction = self.direction % 2 + 1
+    self.draw()
+
   def update_clock(self):
-    
+    self.draw()
+    self.root.after(20000, self.update_clock)
 
-
-
-    sl_ins = sl.SL("4634", "2")
+  def draw(self):
+    sl_ins = sl.SL("4634", "%d" % self.direction)
     sl_ins.get_results()
     traffics = sl_ins.traffics
     blue = '#2A9CD5'
     white = '#FFFFFF'
     grey = '#CCCCCC'
-
-    Tkinter.Label(self.root, image=self.photo, bg=blue, anchor=Tkinter.W).grid(ipadx=5, row=0, column=0, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
-    Tkinter.Label(self.root, text=sl_ins.idname, bg=blue, fg=white, font=('Helvetica', 18, 'bold')).grid(ipadx=5, row=0, column=1, columnspan=3, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
-
-    r=1
+ 
+    Tkinter.Label(self.root, bd=0, image=self.photo, bg=blue, anchor=Tkinter.W).grid(ipadx=5, row=0, rowspan=2, column=0, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
+    Tkinter.Label(self.root, text=sl_ins.idname, bg=blue, fg=white, font=('Helvetica', 18, 'bold')).grid(ipadx=5, row=0, rowspan=2, column=1, columnspan=2, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
+    Tkinter.Button(self.root, image=self.photo, bg=blue, fg=blue, activeforeground=blue,  activebackground=blue, relief=Tkinter.FLAT, highlightcolor=blue, highlightbackground=blue, highlightthickness=0, command=self.update_callback).grid(ipadx=5, row=0, column=3, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
+    Tkinter.Button(self.root, image=self.photo, bg=blue, fg=blue, activeforeground=blue,  activebackground=blue, relief=Tkinter.FLAT, highlightcolor=blue, highlightbackground=blue, highlightthickness=0, command=self.reverse_callback).grid(ipadx=5, row=1, column=3, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
+    
+    r=2
     Tkinter.Label(self.root, text="Type", bg=blue, fg=white, anchor=Tkinter.W).grid(ipadx=5, row=r, column=0, sticky=Tkinter.E+Tkinter.W)
     Tkinter.Label(self.root, text="Line", bg=blue, fg=white, anchor=Tkinter.W).grid(ipadx=5, row=r, column=1, sticky=Tkinter.E+Tkinter.W)
     Tkinter.Label(self.root, text="Destination", bg=blue, fg=white, anchor=Tkinter.W).grid(ipadx=5, row=r, column=2, sticky=Tkinter.E+Tkinter.W)
@@ -51,6 +62,6 @@ class App():
       r=r+1
 
     Tkinter.Label(self.root, text=sl_ins.time, bg=blue, fg=white, anchor=Tkinter.E).grid(ipadx=5, row=r, columnspan=4, sticky=Tkinter.E+Tkinter.W)
-    self.root.after(20000, self.update_clock)
+
 
 app=App()
