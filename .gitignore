@@ -1,0 +1,14 @@
+
+*.pyc
+
+*.pbxproj
+
+gadget.xcodeproj/project.xcworkspace/xcshareddata/gadget.xccheckout
+
+*.xcscheme
+
+*.plist
+
+*.xcuserstate
+
+*.xcworkspacedata
