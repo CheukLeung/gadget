@@ -7,6 +7,7 @@ import time
 import os
 from PIL import Image, ImageTk
 import csv
+import string
 import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -74,8 +75,10 @@ class App():
     self.current_data = []
     if event.keycode == 3342463:
       target_name = event.widget.get()[:len(event.widget.get())-1]
-    else:
+    elif event.char in string.printable:
       target_name = event.widget.get()+event.char
+    else:
+      target_name = event.widget.get()
     target_name = target_name.decode('utf-8').strip().lower().replace(' ', '')
     target_name = target_name.replace('ö', 'o')
     target_name = target_name.replace('ä', 'a')
@@ -90,8 +93,7 @@ class App():
       if target_name in current_name:
         self.current_data.append(stop)
     self.selector_draw()
-    print target_name
-  
+
   def selector_draw(self):
     r=0
     blue = '#2A9CD5'
@@ -104,11 +106,12 @@ class App():
     listbox = Listbox(self.s, selectmode=SINGLE)
     listbox.bind("<Double-Button-1>", self.change_id)
     listbox.pack(fill=BOTH, expand=1)
+     
     for stop in self.current_data:
       if r % 2:
-        bg = grey
-      else:
         bg = white
+      else:
+        bg = grey
       listbox.insert(END, stop['SiteName'])
       
       r=r+1
@@ -123,6 +126,7 @@ class App():
     self.entry = Entry(self.selector, bd=0, text="Search", textvariable=self.search_str)
     self.entry.pack(fill=X)
     self.entry.bind("<Key>", self.search)
+    self.entry.focus()
     self.selector_draw()
     self.selector.mainloop()
 
@@ -163,9 +167,9 @@ class App():
     r=r+1
     for traffic in traffics:
       if r % 2:
-        bg = grey
-      else:
         bg = white
+      else:
+        bg = grey
       Label(self.f, text=traffic['TransportMode'], bg=bg, anchor=W).grid(ipadx=5, row=r, column=0, sticky=E+W)
       Label(self.f, text=traffic['LineNumber'], bg=bg, anchor=W).grid(ipadx=5, row=r, column=1, sticky=E+W)
       Label(self.f, text=traffic['Destination'], bg=bg, anchor=W).grid(ipadx=5, row=r, column=2, sticky=E+W)
