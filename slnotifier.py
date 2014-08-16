@@ -35,7 +35,7 @@ class App():
     self.data = self.read_database()
     self.current_data = self.data
     self.direction = 2
-    self.search_str = StringVar()
+    self.search_str = ""
     self.f=Frame()
     self.s=Frame()
     self.entry=None
@@ -79,6 +79,7 @@ class App():
       target_name = event.widget.get()+event.char
     else:
       target_name = event.widget.get()
+    self.search_str = target_name
     target_name = target_name.decode('utf-8').strip().lower().replace(' ', '')
     target_name = target_name.replace('ö', 'o')
     target_name = target_name.replace('ä', 'a')
@@ -120,10 +121,12 @@ class App():
     self.selector = Tk()
     self.selector.wm_title("Select a place")
     self.selector.geometry("250x700")
-    self.current_data = self.data
     self.s=Frame(self.selector)
     self.s.pack(fill=BOTH, expand=1)
-    self.entry = Entry(self.selector, bd=0, text="Search", textvariable=self.search_str)
+    v = StringVar()
+
+    self.entry = Entry(self.selector, bd=0, textvariable=v)
+    v.set(self.search_str)
     self.entry.pack(fill=X)
     self.entry.bind("<Key>", self.search)
     self.entry.focus()
