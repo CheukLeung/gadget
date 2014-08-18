@@ -1,4 +1,6 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import os
 import notify
 import requests
@@ -9,10 +11,11 @@ import common
 import util
 from bs4 import BeautifulSoup
 
-class SvD_Snapshot(object):
-  SvD_API = 'http://www.svd.se/search.do?output=json&section1=Nyheter'
-  SvD_ICON = os.path.dirname(os.path.realpath(__file__)) + '/svd.jpg'
-  DIR = os.environ['HOME'] + '/Downloads/news'
+class Apple_Snapshot(object):
+  Apple_API = 'http://hkm.appledaily.com/list.php?category=instant'
+  Apple_Cat = {'要聞' : '6996647', '突發' : '10829391', '兩岸' : '10793096', '國際' : '10793140'}
+  Apple_ICON = os.path.dirname(os.path.realpath(__file__)) + '/svd.jpg'
+  DIR = os.environ['HOME'] + '/Downloads/hknews'
   time = None
   content = None
   queue = None
@@ -20,9 +23,22 @@ class SvD_Snapshot(object):
   
   def __init__(self, time):
     self.time = time
-    self.content = requests.get(self.SvD_API + "&%d" % random.randint(1, 9999999)).json()["SvDSearch"]["results"]["articles"]
+    self.content = {'要聞' : [1], '突發' : [2], '兩岸' : [3], '國際' : [5]}
+    self.get_contents();
+#    self.content = requests.get(self.SvD_API + "&%d" % random.randint(1, 9999999)).json()["SvDSearch"]["results"]["articles"]
     return  
-
+  
+  def get_contents(self):
+    for key in self.Apple_Cat:
+      self.content[key] = self.digest(requests.get(self.Apple_API + "&category_guid=" + self.Apple_Cat[key]).text)
+  
+  def digest(self, raw_content):
+    soup = BeautifulSoup(raw_content)
+    [s.extract() for s in soup('script')]
+    all_div = soup.findAll("div","content-list clearfix")
+    if len(all_div) > 0:
+      output = output + all_div[0].get_text().replace("\n\n", "\n")
+  
   def report_start(self):
     notification = ""
     for article in reversed(self.content[0:7]):
@@ -62,7 +78,7 @@ class SvD_Snapshot(object):
     return output
 
   def send_to_file(self, output):
-    filename = self.DIR + '/news-' + time.strftime("%Y%m%d")
+    filename = self.DIR + '/hknews-' + time.strftime("%Y%m%d")
     if os.path.exists(filename):
       f = file(filename, "r+")
       content = output + '\n' + f.read()
@@ -74,7 +90,7 @@ class SvD_Snapshot(object):
     f.close()
       
 if __name__ == "__main__":
-  snapshot = SvD_Snapshot(int (time.time()))  
+  snapshot = Apple_Snapshot(int (time.time()))  
   snapshot.report_start()
   old_snapshot = snapshot
   while True:
