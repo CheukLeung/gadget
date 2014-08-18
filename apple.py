@@ -34,10 +34,11 @@ class Apple_Snapshot(object):
   
   def digest(self, raw_content):
     soup = BeautifulSoup(raw_content)
-    [s.extract() for s in soup('script')]
-    all_div = soup.findAll("div","content-list clearfix")
+    all_div = soup.findAll("p")
     if len(all_div) > 0:
-      output = output + all_div[0].get_text().replace("\n\n", "\n")
+      print all_div[0].get_text().encode('utf-8')
+    return None
+  #output = output + all_div[0].get_text().replace("\n\n", "\n")
   
   def report_start(self):
     notification = ""
