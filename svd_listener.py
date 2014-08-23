@@ -78,7 +78,7 @@ if __name__ == "__main__":
   snapshot.report_start()
   old_snapshot = snapshot
   while True:
-    time.sleep(60)
+    time.sleep(360)
     snapshot = SvD_Snapshot(int (time.time()))
     snapshot.report_difference(old_snapshot)
     old_snapshot = snapshot
