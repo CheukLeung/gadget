@@ -54,6 +54,7 @@ def format_color(text):
   text = text.replace("<dd>", "")
   text = text.replace("<dl>", "")
 
+  
   text = text.replace("<ul>", "")
   text = text.replace("</b>", color.END)
   text = text.replace("</i>", color.END)
