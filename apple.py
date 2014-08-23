@@ -52,7 +52,7 @@ class Apple_Snapshot(object):
   
   def report_start(self):
     notification = ""
-    for article in reversed(self.content['突發'][0:7]):
+    for article in self.content['突發'][0:7]:
       notification = notification  + article["title"] + "\n"
       output=self.format_results(article)
     for key in self.Apple_Cat:
@@ -72,7 +72,7 @@ class Apple_Snapshot(object):
           if article["title"] == last_article["title"]:
             current_changed = False
         if current_changed:
-          notify.notify(summary = article["title"], body = article["description"] + " (" + article["friendlyDateShort"] + ")\n" , app_icon=self.SvD_ICON, timeout=15000)
+          notify.notify(summary = article["title"], app_icon=self.Apple_ICON, timeout=15000)
           output=self.format_results(article)
           self.send_to_file(output, self.Apple_File[key])
     return 
