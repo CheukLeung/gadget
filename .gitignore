@@ -12,3 +12,7 @@
 *.xcuserstate
 
 *.xcworkspacedata
+
+apple.sh
+
+svd_listener.sh

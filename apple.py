@@ -9,11 +9,16 @@ import random
 import requests
 import common
 import util
+import re
+
 from bs4 import BeautifulSoup
 
 class Apple_Snapshot(object):
   Apple_API = 'http://hkm.appledaily.com/list.php?category=instant'
+  AppleDetail_API = 'http://hkm.appledaily.com/'
   Apple_Cat = {'要聞' : '6996647', '突發' : '10829391', '兩岸' : '10793096', '國際' : '10793140'}
+  Apple_File = {'要聞' : 'main', '突發' : 'new', '兩岸' : 'ch', '國際' : 'int'}
+  
   Apple_ICON = os.path.dirname(os.path.realpath(__file__)) + '/svd.jpg'
   DIR = os.environ['HOME'] + '/Downloads/hknews'
   time = None
@@ -23,62 +28,76 @@ class Apple_Snapshot(object):
   
   def __init__(self, time):
     self.time = time
-    self.content = {'要聞' : [1], '突發' : [2], '兩岸' : [3], '國際' : [5]}
+    self.content = {'要聞' : [], '突發' : [], '兩岸' : [], '國際' : []}
     self.get_contents();
-#    self.content = requests.get(self.SvD_API + "&%d" % random.randint(1, 9999999)).json()["SvDSearch"]["results"]["articles"]
     return  
   
   def get_contents(self):
     for key in self.Apple_Cat:
-      self.content[key] = self.digest(requests.get(self.Apple_API + "&category_guid=" + self.Apple_Cat[key]).text)
+      r = requests.get(self.Apple_API + "&category_guid=" + self.Apple_Cat[key])
+      r.encoding = 'utf-8'
+      self.content[key] = self.digest(r.text)
   
   def digest(self, raw_content):
+    content = []
     soup = BeautifulSoup(raw_content)
-    [s.extract() for s in soup('script')]
-    all_div = soup.findAll("div","content-list clearfix")
-    if len(all_div) > 0:
-      output = output + all_div[0].get_text().replace("\n\n", "\n")
+    all_div = soup.findAll("div", "content-list clearfix")[0].findAll("a")
+    for div in all_div:
+      article = {"title" : "", "friendlyDateShort" : "", "url" : "", "date" : ""}
+      article["url"] = div['href']
+      article["title"] = div.find('p').text
+      article["friendlyDateShort"] = div.find('label').text
+      content.append(article)
+    return content
   
   def report_start(self):
     notification = ""
-    for article in reversed(self.content[0:7]):
+    for article in self.content['突發'][0:7]:
       notification = notification  + article["title"] + "\n"
       output=self.format_results(article)
-      self.send_to_file(output)
-    notify.notify(summary = "SvD listener is started", body = notification, app_icon=self.SvD_ICON, timeout=15000)
+    for key in self.Apple_Cat:
+      content = self.content[key]
+      for article in reversed(content):
+        output=self.format_results(article)
+        self.send_to_file(output, self.Apple_File[key])
+    notify.notify(summary = "Apple listener is started", body = notification, app_icon=self.Apple_ICON, timeout=15000)
     return 
 
   def report_difference(self, last_snapshot):
-    for article in reversed(self.content):
-      current_changed = True
-      for last_article in last_snapshot.content: 
-        if article["title"] == last_article["title"] and article["date"] == last_article["date"]:   
-          current_changed = False
-      if current_changed:
-        notify.notify(summary = article["title"], body = article["description"] + " (" + article["friendlyDateShort"] + ")\n" , app_icon=self.SvD_ICON, timeout=15000)
-        output=self.format_results(article)
-        self.send_to_file(output)
+    for key in self.Apple_Cat:
+      content = self.content[key]
+      for article in reversed(content):
+        current_changed = True
+        for last_article in last_snapshot.content[key]:
+          if article["title"] == last_article["title"]:
+            current_changed = False
+        if current_changed:
+          notify.notify(summary = article["title"], app_icon=self.Apple_ICON, timeout=15000)
+          output=self.format_results(article)
+          self.send_to_file(output, self.Apple_File[key])
     return 
   
   def format_results(self, article):
     """Extract the results from a wiki XML content
     """  
     output = "\n" 
-    output = output + '<b>%-15s' % article["friendlyDateShort"] + article["title"] + "</b>\n"
-    output = output + '<code>' + article["description"] + "</code>\n"
-    fulltext = requests.get(article["url"])
+    fulltext = requests.get(self.AppleDetail_API + article["url"])
+    fulltext.encoding = 'utf-8'
     soup = BeautifulSoup(fulltext.text)
-    [s.extract() for s in soup('script')]
-    all_div = soup.findAll("div","articletext")
-    if len(all_div) > 0:
-      output = output + all_div[0].get_text().replace("\n\n", "\n")
-      
-    output = output + "<tt>Source: " + article["url"]  + "</tt>\n"
+    article["date"] = soup.findAll("p","text lastupdate")[0].text
+    output = output + '<b>%-23s' % article["date"] + article["title"] + "</b>\n\n"
+    alltext = soup.findAll("p","text")
+    alltext.pop(0)
+    alltext.pop(0)
+    
+    for text in alltext:
+      output = output + text.get_text() + "\n\n"
+    output = output + "<tt>Source: " + self.AppleDetail_API + article["url"]  + "</tt>\n"
     output = common.format_color(output).encode('utf-8')
     return output
 
-  def send_to_file(self, output):
-    filename = self.DIR + '/hknews-' + time.strftime("%Y%m%d")
+  def send_to_file(self, output, key):
+    filename = self.DIR + '/' + key + '-'+ time.strftime("%Y%m%d")
     if os.path.exists(filename):
       f = file(filename, "r+")
       content = output + '\n' + f.read()
@@ -94,8 +113,8 @@ if __name__ == "__main__":
   snapshot.report_start()
   old_snapshot = snapshot
   while True:
-    time.sleep(60)
-    snapshot = SvD_Snapshot(int (time.time()))
+    time.sleep(360)
+    snapshot = Apple_Snapshot(int (time.time()))
     snapshot.report_difference(old_snapshot)
     old_snapshot = snapshot
 
