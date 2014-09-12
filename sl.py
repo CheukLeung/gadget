@@ -171,7 +171,8 @@ class SL(object):
                           'DisplayTime' : traffic["DisplayTime"]
                         })
     return
-    
+
+
 def main():
   if len(sys.argv) < 4:
     sl = SL(sys.argv[1], sys.argv[2])
