@@ -1,70 +1,24 @@
-gadgetdir=~/gadget
+Gadget
+======
 
-alias wiki='python $gadgetdir/wiki.py'
-alias svenska='python $gadgetdir/translate.py sv'
-alias afrikaans='python $gadgetdir/translate.py af'
-alias albanian='python $gadgetdir/translate.py sq'
-alias arabic='python $gadgetdir/translate.py ar'
-alias azerbaijani='python $gadgetdir/translate.py az'
-alias basque='python $gadgetdir/translate.py eu'
-alias bengali='python $gadgetdir/translate.py bn'
-alias belarusian='python $gadgetdir/translate.py be'
-alias bulgarian='python $gadgetdir/translate.py bg'
-alias catalan='python $gadgetdir/translate.py ca'
-alias chinese='python $gadgetdir/translate.py zh-TW'
-alias croatian='python $gadgetdir/translate.py hr'
-alias czech='python $gadgetdir/translate.py cs'
-alias danish='python $gadgetdir/translate.py da'
-alias dutch='python $gadgetdir/translate.py nl'
-alias english='python $gadgetdir/translate.py en'
-alias esperanto='python $gadgetdir/translate.py eo'
-alias estonian='python $gadgetdir/translate.py et'
-alias filipino='python $gadgetdir/translate.py tl'
-alias finnish='python $gadgetdir/translate.py fi'
-alias french='python $gadgetdir/translate.py fr'
-alias galician='python $gadgetdir/translate.py gl'
-alias georgian='python $gadgetdir/translate.py ka'
-alias german='python $gadgetdir/translate.py de'
-alias greek='python $gadgetdir/translate.py el'
-alias gujarati='python $gadgetdir/translate.py gu'
-alias haitian='python $gadgetdir/translate.py ht'
-alias hebrew='python $gadgetdir/translate.py iw'
-alias hindi='python $gadgetdir/translate.py hi'
-alias hungarian='python $gadgetdir/translate.py hu'
-alias icelandic='python $gadgetdir/translate.py is'
-alias indonesian='python $gadgetdir/translate.py id'
-alias irish='python $gadgetdir/translate.py ga'
-alias italian='python $gadgetdir/translate.py it'
-alias japanese='python $gadgetdir/translate.py ja'
-alias kannada='python $gadgetdir/translate.py kn'
-alias korean='python $gadgetdir/translate.py ko'
-alias latin='python $gadgetdir/translate.py la'
-alias latvian='python $gadgetdir/translate.py lv'
-alias lithuanian='python $gadgetdir/translate.py lt'
-alias macedonian='python $gadgetdir/translate.py mk'
-alias malay='python $gadgetdir/translate.py ms'
-alias maltese='python $gadgetdir/translate.py mt'
-alias norwegian='python $gadgetdir/translate.py no'
-alias persian='python $gadgetdir/translate.py fa'
-alias polish='python $gadgetdir/translate.py pl'
-alias portuguese='python $gadgetdir/translate.py pt'
-alias romanian='python $gadgetdir/translate.py ro'
-alias russian='python $gadgetdir/translate.py ru'
-alias serbian='python $gadgetdir/translate.py sr'
-alias slovak='python $gadgetdir/translate.py sk'
-alias slovenian='python $gadgetdir/translate.py sl'
-alias spanish='python $gadgetdir/translate.py es'
-alias swahili='python $gadgetdir/translate.py sw'
-alias swedish='python $gadgetdir/translate.py sv'
-alias tamil='python $gadgetdir/translate.py ta'
-alias telugu='python $gadgetdir/translate.py te'
-alias thai='python $gadgetdir/translate.py th'
-alias turkish='python $gadgetdir/translate.py tr'
-alias ukrainian='python $gadgetdir/translate.py uk'
-alias urdu='python $gadgetdir/translate.py ur'
-alias vietnamese='python $gadgetdir/translate.py vi'
-alias welsh='python $gadgetdir/translate.py cy'
-alias yiddish='python $gadgetdir/translate.py yi'
+Multiple scripts to run in command line
 
+Wiki
+----
+Get main content from wikipedia.
 
-
+Usage:
+```
+python wiki.py <langauge code> <things to wiki>
+```
+Example:
+```
+python wiki.py en helloworld
+```
+Results:
+```
+ A "Hello, World!" program is a computer program that outputs or displays
+"Hello, World!" to the user. Being a very simple program in most programming languages,
+it is often used to illustrate the basic syntax of a programming language for a working
+program.   Source: http://en.wikipedia.org/wiki/helloworld
+```
