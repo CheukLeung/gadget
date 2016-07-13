@@ -71,7 +71,8 @@ class Wiki(object):
     results = util.get_contents_text(self.raw_results, 'extract')
     if self.lang != "zh":
       results = results + "\n<tt>Source: " + self.url + "</tt>\n"
-    self.results = common.format_color(results).encode('utf-8')
+    results = common.format_color(results)
+    self.results = common.remove_html_code(results).encode('utf-8')
     return
     
 def main():

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import requests
+import re
 
 def format_texts(texts):
   """Format texts and remove not supported characters
@@ -50,24 +51,18 @@ def format_color(text):
   text = text.replace("<ol>", color.GREEN)
   text = text.replace("<code>", color.BLUE)
   text = text.replace("<tt>", color.DARKCYAN)
-  text = text.replace("<p>", "")
-  text = text.replace("<dd>", "")
-  text = text.replace("<dl>", "")
 
-  
-  text = text.replace("<ul>", "")
   text = text.replace("</b>", color.END)
   text = text.replace("</i>", color.END)
   text = text.replace("</li>", color.END)
   text = text.replace("</ol>", color.END)
   text = text.replace("</code>", color.END)
   text = text.replace("</tt>", color.END)
-  text = text.replace("</p>", "")
-  text = text.replace("</ul>", "")  
-  text = text.replace("</dd>", "")
-  text = text.replace("</dl>", "")
   return text
-  
+
+def remove_html_code(text):
+	return re.sub('<[^<]+?>', '', text)
+
 class color:
   """Class for color key
   """
