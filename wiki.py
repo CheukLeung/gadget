@@ -80,7 +80,7 @@ def main():
   lang = sys.argv.pop(0)
   wiki = Wiki(lang, sys.argv)
   rows, columns = os.popen('stty size', 'r').read().split()
-  print textwrap.fill(wiki.get_results(),int(columns))
+  print textwrap.fill(wiki.get_results(),int(columns),replace_whitespace=False)
 
 if __name__ == "__main__":
   main()
