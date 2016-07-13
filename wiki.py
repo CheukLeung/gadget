@@ -3,6 +3,7 @@ import common
 import util
 import sys
 import os
+import textwrap
 
 class Wiki(object):
   """A class of Wiki enquiry
@@ -77,7 +78,8 @@ def main():
   sys.argv.pop(0)
   lang = sys.argv.pop(0)
   wiki = Wiki(lang, sys.argv)
-  print wiki.get_results()
+  rows, columns = os.popen('stty size', 'r').read().split()
+  print textwrap.fill(wiki.get_results(),int(columns))
 
 if __name__ == "__main__":
   main()
