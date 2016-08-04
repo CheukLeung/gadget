@@ -3,6 +3,7 @@ import common
 import util
 import sys
 import os
+from datetime import datetime, timedelta
 
 class SLName(object):
   """A class of Wiki enquiry
@@ -118,6 +119,12 @@ class SL(object):
     
     all_traffic = []
     for metro in metro_results:
+      if metro['DisplayTime'] == 'Nu':
+        metro['ExpectedDateTime'] = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+      else:
+        delta = [int(s) for s in metro['DisplayTime'].split() if s.isdigit()][0]
+        expectedTime = datetime.now() + timedelta(minutes=delta)
+        metro['ExpectedDateTime'] = expectedTime.strftime("%Y-%m-%dT%H:%M:%S")
       all_traffic.append(metro)
     for bus in bus_results:
       all_traffic.append(bus)
@@ -125,7 +132,8 @@ class SL(object):
       all_traffic.append(train)
     for tram in tram_results:
       all_traffic.append(tram)
-    
+    all_traffic = sorted(all_traffic, key=lambda k: k['ExpectedDateTime'])
+
     self.time = self.raw_results.json()["ResponseData"]["LatestUpdate"].replace("T", " ")
     output = "\n" + self.time + "\n\n"
     output = output + self.form_results_text(all_traffic)
