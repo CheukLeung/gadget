@@ -32,7 +32,7 @@ def format_url(api, flags, keywords):
   for key, item in flags.items():
     url = url + '&' + key + '=' + item
   return url
-  
+
 def get_url_content(url):
   """Get content from an URL
   @param url URL to get content
@@ -49,7 +49,7 @@ def format_color(text):
   text = text.replace("<i>", color.GREEN)
   text = text.replace("<li>", color.GREEN)
   text = text.replace("<ol>", color.GREEN)
-  text = text.replace("<code>", color.BLUE)
+  text = text.replace("<code>", color.CYAN)
   text = text.replace("<tt>", color.DARKCYAN)
 
   text = text.replace("</b>", color.END)
